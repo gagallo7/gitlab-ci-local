@@ -237,15 +237,28 @@ export class ParserIncludes {
 
             if (remote.schema.startsWith("http")) {
                 const ext = "tmp-" + Math.random();
-                await fs.mkdirp(path.dirname(`${cwd}/${target}/${normalizedFile}`));
-
                 const gitCloneBranch = (ref === "HEAD") ? "" : `--branch ${ref}`;
+                // if ref is a SHA, we can't use git clone --branch, we would need to do a --depth=1 and
+                // then checkout the SHA
+                let clone_script = `git clone ${gitCloneBranch} "${ref}" -n --depth=1 --filter=tree:0 \\
+                        ${remote.schema}://${remote.host}/${project}.git \\
+                        ${cwd}/${target}.${ext}`;
+                let fetch_script = "true";
+                if (ref.match(/^[0-9a-f]{40}$/)) {
+                    clone_script = `git clone -n --depth=1 --filter=tree:0 \\
+                        ${remote.schema}://${remote.host}/${project}.git \\
+                        ${cwd}/${target}.${ext}`;
+                    fetch_script = `cd ${cwd}/${target}.${ext} \\
+                        && git fetch --depth=1 origin ${ref} \\
+                        && git checkout ${ref}`;
+                }
+
+                await fs.mkdirp(path.dirname(`${cwd}/${target}/${normalizedFile}`));
                 await Utils.bash(`
                     cd ${cwd}/${stateDir} \\
-                        && git clone ${gitCloneBranch} -n --depth=1 --filter=tree:0 \\
-                                ${remote.schema}://${remote.host}:${remote.port}/${project}.git \\
-                                ${cwd}/${target}.${ext} \\
+                        && ${clone_script} \\
                         && cd ${cwd}/${target}.${ext} \\
+                        && ${fetch_script} \\
                         && git sparse-checkout set --no-cone ${normalizedFile} \\
                         && git checkout \\
                         && cd ${cwd}/${stateDir} \\
