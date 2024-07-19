@@ -1370,6 +1370,9 @@
       "description": "Splits up a single job into multiple that run in parallel. Provides `CI_NODE_INDEX` and `CI_NODE_TOTAL` environment variables to the jobs.",
       "oneOf": [
         {
+          "type": "null"
+        },
+        {
           "type": "integer",
           "description": "Creates N instances of the job that run in parallel.",
           "default": 0,
@@ -1941,7 +1944,10 @@
           "type": "string"
         },
         "dependencies": {
-          "type": "array",
+          "type": [
+            "array",
+            "null"
+          ],
           "description": "Specify a list of job names from earlier stages from which artifacts should be loaded. By default, all previous artifacts are passed. Use an empty array to skip downloading artifacts.",
           "items": {
             "type": "string"
