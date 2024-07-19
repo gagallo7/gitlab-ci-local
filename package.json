@@ -3,7 +3,7 @@
   "name": "gitlab-ci-local",
   "description": "Tired of pushing to test your .gitlab-ci.yml?",
   "main": "src/index.js",
-  "bin": "src/index.js",
+  "bin": {"gitlab-ci-local": "src/index.js"},
   "version": "4.55.0",
   "scripts": {
     "esbuild": "esbuild src/index.ts --outfile=bin/index.cjs --bundle --platform=node --format=cjs --minify --external:yargs --sourcemap=inline",
@@ -163,7 +163,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/firecow/gitlab-ci-local.git"
+    "url": "https://github.com/gagallo7/gitlab-ci-local.git"
   },
   "author": "Mads Jon Nielsen <madsjon@gmail.com>",
   "license": "MIT",
