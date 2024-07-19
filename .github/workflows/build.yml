@@ -5,7 +5,7 @@ on:
     tags-ignore:
       - '**'
     branches:
-      - master
+      - mesa-fixes
   pull_request:
 
 env:
