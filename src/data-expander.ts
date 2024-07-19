@@ -5,8 +5,7 @@ import {Job, Need} from "./job.js";
 import {traverse} from "object-traversal";
 import {Utils} from "./utils.js";
 
-const extendsMaxDepth = 11;
-const extendsRecurse = (gitlabData: any, jobName: string, jobData: any, parents: any[], depth: number) => {
+const extendsRecurse = (gitlabData: any, jobName: string, jobData: any, parents: any[], extendsMaxDepth: number, depth: number) => {
     assert(depth < extendsMaxDepth, chalk`{blueBright ${jobName}}: circular dependency detected in \`extends\``);
     depth++;
 
@@ -16,17 +15,17 @@ const extendsRecurse = (gitlabData: any, jobName: string, jobData: any, parents:
     for (const parentName of jobData.extends) {
         const parentData = gitlabData[parentName];
         assert(parentData != null, chalk`{blueBright ${parentName}} is unspecified, used by {blueBright ${jobName}} extends`);
-        extendsRecurse(gitlabData, parentName, parentData, parents, depth);
+        extendsRecurse(gitlabData, parentName, parentData, parents, extendsMaxDepth, depth);
         parents.push(parentData);
     }
     return parents;
 };
 
-export function jobExtends (gitlabData: any) {
+export function jobExtends(gitlabData: any, extendsMaxDepth: number) {
     for (const [jobName, jobData] of Object.entries<any>(gitlabData)) {
         if (Job.illegalJobNames.has(jobName)) continue;
         if (!Utils.isObject(jobData)) continue;
-        const parentDatas = extendsRecurse(gitlabData, jobName, jobData, [], 0);
+        const parentDatas = extendsRecurse(gitlabData, jobName, jobData, [], extendsMaxDepth, 0);
         gitlabData[jobName] = deepExtend({}, ...parentDatas, jobData);
     }
 

@@ -276,4 +276,8 @@ export class Argv {
     get maximumIncludes (): number {
         return this.map.get("maximumIncludes") ?? 150; // https://docs.gitlab.com/ee/administration/settings/continuous_integration.html#maximum-includes
     }
+
+    get extendsMaxDepth (): number {
+        return this.map.get("extendsMaxDepth") ?? 11;
+    }
 }

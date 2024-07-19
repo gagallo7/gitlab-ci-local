@@ -38,7 +38,7 @@ test("extends invalid job", () => {
     try {
         DataExpander.jobExtends({
             "test-job": {extends: ["build-job"]},
-        });
+        }, 11);
         expect(true).toBe(false);
     } catch (e) {
         assert(e instanceof AssertionError, "e is not instanceof AssertionError");
@@ -51,7 +51,7 @@ test("extends infinite loop", () => {
         DataExpander.jobExtends({
             "build-job": {extends: ["test-job"]},
             "test-job": {extends: ["build-job"]},
-        });
+        }, 11);
         expect(true).toBe(false);
     } catch (e) {
         assert(e instanceof AssertionError, "e is not instanceof AssertionError");
@@ -69,7 +69,7 @@ test("extends simple", () => {
         },
     };
 
-    DataExpander.jobExtends(gitlabData);
+    DataExpander.jobExtends(gitlabData, 11);
 
     const expected = {
         "test-job": {

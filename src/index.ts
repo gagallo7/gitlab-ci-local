@@ -222,6 +222,11 @@ process.on("SIGUSR2", async () => await cleanupJobResources(jobs));
             description: "The maximum number of includes",
             requiresArg: false,
         })
+        .option("extends-max-depth", {
+            type: "number",
+            description: "The maximum extends tree height",
+            requiresArg: false,
+        })
         .option("artifacts-to-source", {
             type: "boolean",
             description: "Copy the generated artifacts into cwd",

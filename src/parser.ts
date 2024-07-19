@@ -114,9 +114,10 @@ export class Parser {
         ParserIncludes.resetCount();
 
         const gitlabData: any = deepExtend({}, ...yamlDataList);
+        const extendsMaxDepth: number = argv.extendsMaxDepth;
 
         // Expand various fields in gitlabData
-        DataExpander.jobExtends(gitlabData);
+        DataExpander.jobExtends(gitlabData, extendsMaxDepth);
         DataExpander.reference(gitlabData, gitlabData);
         DataExpander.flattenLists(gitlabData);
         DataExpander.transformDeprecatedGlobalDefaultSyntax(gitlabData);
